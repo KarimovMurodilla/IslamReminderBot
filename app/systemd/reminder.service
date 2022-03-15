@@ -1,0 +1,12 @@
+[Unit]
+After=network.target
+Description=Reminder
+
+[Service]
+Type=simple
+WorkingDirectory=/root/IslamReminder/
+ExecStart=/usr/bin/python3 main.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
