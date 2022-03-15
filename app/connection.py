@@ -80,3 +80,12 @@ class Database:
 			response = self.cur.execute("SELECT group_id FROM groups WHERE r_status = '🟢'").fetchall()
 
 		return response
+
+	def get_azan_audios(self):
+		"""
+		Getting azan audios file_id.
+		"""
+		with self.con:
+			response = self.cur.execute("SELECT file_id FROM azan_audios").fetchall()
+
+		return response

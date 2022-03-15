@@ -18,6 +18,13 @@ async def leave_chat(message: types.Message):
     db.delete_group(group_id)
 
 
+async def get_file_id(message: types.Message):
+    print(message.audio.file_id)
+    # print(db.get_azan_audios())
+
+
 def register_settings_handlers(dp: Dispatcher):
     dp.register_message_handler(new_chat, content_types = 'new_chat_members', state = '*')
     dp.register_message_handler(leave_chat, content_types = 'left_chat_member', state = '*')
+    dp.register_message_handler(get_file_id, content_types = 'audio', state = '*')
+

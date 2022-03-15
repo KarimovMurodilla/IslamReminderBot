@@ -24,6 +24,4 @@ def times():
         result = f"{h.text}"
         DATA.append(result)
 
-    return DATA
-
-print(times())
+    return {DATA[0]: "Bomdod", DATA[1]: "Quyosh", DATA[2]: "Peshin", DATA[3]: "Asr", DATA[4]: "Shom", DATA[5]: "Xufton"}
