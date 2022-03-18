@@ -13,8 +13,8 @@ from azan_times import times
 scheduler = AsyncIOScheduler()
 
 async def send_remind():
-    server_time = datetime.datetime.today() + datetime.timedelta(hours=4)
-    time_now = server_time.strftime('%H:%M')
+    # server_time = datetime.datetime.today() + datetime.timedelta(hours=4)
+    time_now = datetime.datetime.now().strftime('%H:%M')
     times_data = times()
     if time_now in times_data:
         for i in db.get_enabled_rstatuses():
@@ -38,7 +38,11 @@ async def send_remind():
                 await bot.send_message(875587704, f"{TelegramAPIError}")
                 continue
 
+            except Exception as e:
+                await bot.send_message(875587704, f"{e}")
+
+
 
 
 def schedule_jobs():
-    scheduler.add_job(send_remind, 'interval', seconds=5)
+    scheduler.add_job(send_remind, 'interval', minutes=1)

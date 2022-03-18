@@ -28,6 +28,13 @@ async def callback_change_rstatus(c: types.CallbackQuery):
         reply_markup = buttons.show_group_settings(group_id, db.get_data_from_group_id(group_id)[5]))
 
 
+async def callback_back_to_menu(c: types.CallbackQuery):
+    user_id = c.from_user.id
+    await c.message.edit_text("Assalomu aleykum\nSizning guruxlaringiz ro'yhati", 
+        reply_markup = buttons.show_dashboard(user_id))
+
+
 def register_callback_handlers(dp: Dispatcher):
 	dp.register_callback_query_handler(callback_get_group_settings, lambda c: c.data.startswith('group_id'), state = '*')
 	dp.register_callback_query_handler(callback_change_rstatus, lambda c: c.data.startswith('change_rStatus'), state = '*')
+	dp.register_callback_query_handler(callback_back_to_menu, lambda c: c.data == "back", state = '*')
