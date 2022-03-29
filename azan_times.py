@@ -1,27 +1,58 @@
-from bs4 import BeautifulSoup as bs
 import requests
+from pprint import pprint
+from bs4 import BeautifulSoup as bs
 
+from loader import urls, agent
+from app.data import region_ids, uz_countries
 
-url = "https://islom.uz"
+NAMAZ_TIMES = {}
 
-agent = {
-    'User-Agent' : 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-}
+class NamazTimes:
+    def get_times(self) -> list:
+        """
+        O'zbekistondagi deyarli barcha Shahar/Viloyat/Qishloq larning
+        namoz vaqtlarini ro'yhat ko'rinishida qaytaruvchi metod. 
+        !!! Namoz vaqtlari islom.uz saytidan dan olindadi.
+        """
+        DATA = []
 
-def times():
-    r = requests.get(url, headers=agent)
-    soup = bs(r.content, 'html.parser')
+        for i in region_ids:     
+            r = requests.get(urls[0]+i, headers=agent)
+            soup = bs(r.content, 'html.parser')
 
-    h = soup.findAll(class_='cricle')
-    hour = soup.findAll(class_='p_clock')
-    # name = soup.findAll(class_='p_v')
+            hour = soup.findAll(class_='cricle')
+            hours = soup.findAll(class_='p_clock')
 
+            for hour in (hours):
+                result = f"{hour.text}"
+                DATA.append(result)
 
-    DATA = []
+        return DATA
 
+    def get_country_names(self, url) -> list:
+        """
+        O'zbekiston ichidagi mintaqalarni 
+        ro'yhat ko'rinishida qaytaruvchi metod.
+        !!! Mintaqalar ro'yhati islom.uz saytidan dan olindadi.
+        """
+        r = requests.get(url, headers=agent)
+        soup = bs(r.content, 'html.parser')
+        h = soup.findAll(class_='custom-select')
+        return [i.text.lower() for i in h[0].findAll('option')]
 
-    for h in (hour):
-        result = f"{h.text}"
-        DATA.append(result)
+    def get_country_times(self) -> dict:
+        global NAMAZ_TIMES
+        NAMAZ_TIMES = {}
 
-    return {DATA[0]: "Bomdod", DATA[1]: "Quyosh", DATA[2]: "Peshin", DATA[3]: "Asr", DATA[4]: "Shom", DATA[5]: "Xufton"}
+        times = NamazTimes().get_times()
+
+        n = 0
+        for i in uz_countries:
+            NAMAZ_TIMES[i] = []
+            for k in range(len(times)):
+                if len(NAMAZ_TIMES[i]) >= 6:
+                    break
+
+                else:
+                    NAMAZ_TIMES[i].append(times[n])
+                    n += 1

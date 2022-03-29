@@ -1,5 +1,6 @@
 from aiogram import types
 from loader import db
+from app.data import uz_countries
 
 # This is inline keyboard will be showed when user send command /dashboard
 def show_dashboard(user_id):
@@ -18,12 +19,12 @@ def show_dashboard(user_id):
 def show_group_settings(group_id, status_remind):
 	settings = types.InlineKeyboardMarkup(row_width = 2)
 	r_status = types.InlineKeyboardButton(text = f'Namoz vaqtini eslatish {status_remind}', callback_data = f'change_rStatus {group_id}')
-	set_location = types.InlineKeyboardButton(text = f'Mintaqani sozlash', callback_data = f'set_location')
+	show_countries = types.InlineKeyboardButton(text = f'Mintaqani sozlash', callback_data = f'show_countries {group_id}')
 	set_audio = types.InlineKeyboardButton(text = f'Azon Ovozi', callback_data = f'show_audios {group_id}')
 	b_status = types.InlineKeyboardButton(text = f'Yozishni cheklash', callback_data = f'b_status')
 	btn_back = types.InlineKeyboardMarkup(text = "⬅️ Orqaga", callback_data = "back_to_dashboard")
 	settings.add(
-		r_status, set_location,
+		r_status, show_countries,
 		set_audio, b_status
 		)
 	settings.add(btn_back)
@@ -45,3 +46,19 @@ def show_audios(group_id, a_status):
 	audio_dashboard.add(btn_back)
 
 	return audio_dashboard
+
+
+def get_indicator(group_id, country):
+	flag = db.get_group_location(group_id)[0]
+	if flag == country:
+		return '✅'
+	else:
+		return ''
+
+def show_countries(group_id):
+	countries = types.InlineKeyboardMarkup(row_width = 4)
+	for i in uz_countries:
+		c_name = types.InlineKeyboardButton(text = f"{get_indicator(group_id, i.lower())} {i.title()}", callback_data = f"set_location {i.lower()},{group_id}")
+		countries.insert(c_name)
+
+	return countries

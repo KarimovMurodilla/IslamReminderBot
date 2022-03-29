@@ -1,12 +1,14 @@
 import asyncio
 import logging
 
+from aiogram import types
 from aiogram import Bot, Dispatcher, executor
 from aiogram.types import BotCommand
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
 from loader import bot
+from azan_times import NamazTimes
 from app.config import BOT_TOKEN
 from time_checker import schedule_jobs, scheduler
 from app.handlers.commands import register_cmd_handlers
@@ -14,14 +16,12 @@ from app.handlers.settings import register_settings_handlers
 from app.handlers.callbacks import register_callback_handlers
 
 
-
-
 async def set_commands(bot: Bot):
     commands = [
         BotCommand(command="/start", description="Start Bot"),
         BotCommand(command="/dashboard", description="List of available groups")
     ]
-    await bot.set_my_commands(commands)
+    await bot.set_my_commands(commands, scope = types.BotCommandScopeAllPrivateChats())
 
 
 async def main(dp):
@@ -44,3 +44,6 @@ if __name__ == '__main__':
 	dp = Dispatcher(bot, storage = storage)
 	scheduler.start()
 	executor.start_polling(dp, on_startup = main)
+
+	namaz_times = NamazTimes()
+	namaz_times.get_country_times()

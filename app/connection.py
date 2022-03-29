@@ -89,3 +89,23 @@ class Database:
 			response = self.cur.execute("SELECT file_id FROM azan_audios").fetchall()
 
 		return response
+
+	def set_location(self, group_id, country_name):
+		"""This method called when user wants to set his group location"""
+		with self.con:
+			self.cur.execute("UPDATE groups SET group_location = ? WHERE group_id = ?", (country_name, group_id,))
+			self.con.commit()
+
+	def get_group_location(self, group_id):
+		"""This method returns group location"""
+		with self.con:
+			response = self.cur.execute("SELECT group_location FROM groups WHERE group_id = ?", (group_id,)).fetchone()
+			
+		return response
+
+	def get_group_id_of_country(self, group_location):
+		"""This method returns id of called country"""
+		with self.con:
+			response = self.cur.execute("SELECT group_id FROM groups WHERE group_location = ?", (group_location,)).fetchone()
+			
+		return response
