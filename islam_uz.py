@@ -7,7 +7,7 @@ from app.data import region_ids, uz_countries
 
 NAMAZ_TIMES = {}
 
-class NamazTimes:
+class IslamUz:
     def get_times(self) -> list:
         """
         O'zbekistondagi deyarli barcha Shahar/Viloyat/Qishloq larning
@@ -44,7 +44,7 @@ class NamazTimes:
         global NAMAZ_TIMES
         NAMAZ_TIMES = {}
 
-        times = NamazTimes().get_times()
+        times = IslamUz().get_times()
 
         n = 0
         for i in uz_countries:
@@ -56,3 +56,8 @@ class NamazTimes:
                 else:
                     NAMAZ_TIMES[i].append(times[n])
                     n += 1
+
+
+if not NAMAZ_TIMES:
+    namaz_times = IslamUz()
+    namaz_times.get_country_times()

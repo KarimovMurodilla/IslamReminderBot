@@ -4,7 +4,7 @@ from app.connection import Database
 
 # aiogram
 bot = Bot(token=BOT_TOKEN, parse_mode = 'html')
-db = Database(r"databases\main_db.db")
+db = Database(r"/root/IslamReminderBot/databases/main_db.db")
 
 # requests
 urls = ["https://islom.uz/region/", 'https://islom.uz/vaqtlar/2/3']

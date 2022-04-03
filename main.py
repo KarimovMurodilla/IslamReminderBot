@@ -8,7 +8,6 @@ from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 
 from loader import bot
-from azan_times import NamazTimes
 from app.config import BOT_TOKEN
 from time_checker import schedule_jobs, scheduler
 from app.handlers.commands import register_cmd_handlers
@@ -45,5 +44,3 @@ if __name__ == '__main__':
 	scheduler.start()
 	executor.start_polling(dp, on_startup = main)
 
-	namaz_times = NamazTimes()
-	namaz_times.get_country_times()

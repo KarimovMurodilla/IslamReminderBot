@@ -104,8 +104,11 @@ class Database:
 		return response
 
 	def get_group_id_of_country(self, group_location):
-		"""This method returns id of called country"""
+		"""
+		This method returns id of called country.
+		Returns group_id if remind status is enabled
+		"""
 		with self.con:
-			response = self.cur.execute("SELECT group_id FROM groups WHERE group_location = ?", (group_location,)).fetchone()
+			response = self.cur.execute("SELECT group_id FROM groups WHERE group_location = ? AND r_status = '🟢'", (group_location,)).fetchone()
 			
 		return response

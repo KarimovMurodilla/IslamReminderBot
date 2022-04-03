@@ -9,18 +9,18 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from loader import bot, db
 from app.data import NAMAZ_NAMES
-from azan_times import NamazTimes, NAMAZ_TIMES
+from islam_uz import IslamUz, NAMAZ_TIMES
 
 scheduler = AsyncIOScheduler()
 
 async def send_remind():
-    # server_time = datetime.datetime.today() + datetime.timedelta(hours=4)
-    time_now = datetime.datetime.now().strftime('%H:%M')
+    server_time = datetime.datetime.today() + datetime.timedelta(hours=3)
+    time_now = server_time.strftime('%H:%M')
     response = [(key, db.get_group_id_of_country(key)[0]) for key in NAMAZ_TIMES.keys() if time_now in NAMAZ_TIMES[key] and db.get_group_id_of_country(key)]
-    
+
     for i in response:
         try:
-            if NAMAZ_NAMES[d[i[0]].index(time_now)] == 'Quyosh':
+            if NAMAZ_NAMES[NAMAZ_TIMES[i[0]].index(time_now)] == 'Quyosh':
                 await bot.send_message(i[1], 
                     f"<b>Assalomu Aleykum\nVa Rahmatullohi va Barokotuh.</b>\n\n"
                     f"<i>Quyosh chiqishi vaqti bo'ldi</i>")
@@ -29,7 +29,7 @@ async def send_remind():
                 await bot.send_audio(i[1], random.choice([a[0] for a in db.get_azan_audios()])),
                 await bot.send_message(i[1], 
                     f"<b>Assalomu Aleykum\nVa Rahmatullohi va Barokotuh.</b>\n\n"
-                    f"<i>{NAMAZ_NAMES[d[i[0]].index(time_now)]} namozi vaqti bo'ldilar</i>")
+                    f"<i>{NAMAZ_NAMES[NAMAZ_TIMES[i[0]].index(time_now)]} namozi vaqti bo'ldilar</i>")
         
         except BotBlocked:
             await bot.send_message(875587704, f"{BotBlocked}")
@@ -44,8 +44,10 @@ async def send_remind():
 
 
 async def update_namaz_times():
-    namaz_times = NamazTimes()
+    namaz_times = IslamUz()
     namaz_times.get_country_times()
+
+    await bot.send_message(875587704, "Times was updated!")
 
 
 

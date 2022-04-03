@@ -1,7 +1,8 @@
 import datetime
 from loader import db
 
-time_now = datetime.datetime.now().strftime('%H:%M')
+server_time = datetime.datetime.today() + datetime.timedelta(hours=4)
+time_now = server_time.strftime('%H:%M')
 
 d = {'ангрен': [time_now, '06:09', '12:25', '16:50', '18:46', '19:58'],
  'андижон': ['04:38', '06:00', '12:16', '16:42', '18:37', '19:49'],
